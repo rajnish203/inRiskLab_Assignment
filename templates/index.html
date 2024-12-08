@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Products</h1>
+    </header>
+    <div class="form-container">
+        <h2>Add a New Product</h2>
+        <form id="productForm">
+            <input type="text" id="title" placeholder="Title" required>
+            <input type="number" id="price" placeholder="Price" required>
+            <input type="text" id="category" placeholder="Category" required>
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody id="productTableBody">
+            {% for product in products %}
+            <tr>
+                <td>{{ product.title }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.category }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        document.getElementById('productForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+            const price = document.getElementById('price').value;
+            const category = document.getElementById('category').value;
+
+            const response = await fetch('/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, price, category })
+            });
+
+            if (response.ok) {
+                location.reload(); // Reload the page to display the updated product list
+            } else {
+                alert('Error adding product. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
